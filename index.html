@@ -1,0 +1,122 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Ứng Dụng Mã Hóa AES</title>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/crypto-js/4.0.0/crypto-js.min.js"></script>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f4f4f4;
+            margin: 0;
+            padding: 20px;
+        }
+        h1 {
+            color: #333;
+            text-align: center;
+        }
+        .container {
+            max-width: 600px;
+            margin: auto;
+            background: #fff;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+        }
+        label {
+            font-weight: bold;
+            margin-top: 10px;
+            display: block;
+        }
+        textarea, input[type="text"] {
+            width: 100%;
+            padding: 10px;
+            margin-top: 5px;
+            border: 1px solid #ccc;
+            border-radius: 4px;
+            font-size: 16px;
+        }
+        button {
+            background-color: #28a745;
+            color: white;
+            border: none;
+            border-radius: 4px;
+            padding: 10px 15px;
+            font-size: 16px;
+            cursor: pointer;
+            margin-top: 10px;
+            width: 48%;
+            transition: background-color 0.3s;
+        }
+        button:hover {
+            background-color: #218838;
+        }
+        #output {
+            background-color: #e9ecef;
+            padding: 10px;
+            border-radius: 4px;
+            margin-top: 15px;
+            white-space: pre-wrap; /* Cho phép hiển thị kết quả nhiều dòng */
+        }
+        .button-container {
+            display: flex;
+            justify-content: space-between;
+        }
+    </style>
+</head>
+<body>
+    <h1>Ứng Dụng Mã Hóa AES</h1>
+
+    <div class="container">
+        <label for="textInput">Nhập văn bản cần mã hóa:</label>
+        <textarea id="textInput" rows="4"></textarea>
+
+        <label for="keyInput">Nhập khóa mã hóa:</label>
+        <input type="text" id="keyInput" />
+
+        <div class="button-container">
+            <button id="encryptButton">Mã hóa</button>
+            <button id="decryptButton">Giải mã</button>
+        </div>
+
+        <h2>Kết quả:</h2>
+        <pre id="output"></pre>
+    </div>
+
+    <script>
+        // Hàm mã hóa
+        const encrypt = (text, key) => {
+            return CryptoJS.AES.encrypt(text, key).toString();
+        };
+
+        // Hàm giải mã
+        const decrypt = (encryptedText, key) => {
+            const bytes = CryptoJS.AES.decrypt(encryptedText, key);
+            return bytes.toString(CryptoJS.enc.Utf8);
+        };
+
+        // Xử lý sự kiện khi nhấn nút mã hóa
+        document.getElementById('encryptButton').onclick = () => {
+            const textToEncrypt = document.getElementById('textInput').value;
+            const key = document.getElementById('keyInput').value;
+
+            const encrypted = encrypt(textToEncrypt, key);
+            document.getElementById('output').textContent = `
+                Dữ liệu sau khi mã hóa: ${encrypted}
+            `;
+        };
+
+        // Xử lý sự kiện khi nhấn nút giải mã
+        document.getElementById('decryptButton').onclick = () => {
+            const encryptedText = document.getElementById('output').textContent.split(': ')[1].trim();
+            const key = document.getElementById('keyInput').value;
+
+            const decrypted = decrypt(encryptedText, key);
+            document.getElementById('output').textContent += `
+                \nDữ liệu sau khi giải mã: ${decrypted}
+            `;
+        };
+    </script>
+</body>
+</html>
